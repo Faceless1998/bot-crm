@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/users');
+        const response = await axios.get('https://batajbot-crm-f8f614bf11e3.herokuapp.com/users');
         // Sort users by trial_end_date in ascending order
         const sortedUsers = response.data.sort((a, b) => new Date(a.trial_end_date) - new Date(b.trial_end_date));
         setUsers(sortedUsers);
@@ -22,7 +22,7 @@ function App() {
   const toggleStatus = async (id, currentStatus) => {
     try {
       const newStatus = !currentStatus; // Toggle status
-      const response = await axios.put(`http://localhost:5000/users/${id}`, { status: newStatus });
+      const response = await axios.put(`https://batajbot-crm-f8f614bf11e3.herokuapp.com/users/${id}`, { status: newStatus });
 
       // Update the user status and trial_end_date in the state
       setUsers(users.map(user => 
