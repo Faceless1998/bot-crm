@@ -24,9 +24,14 @@ function App() {
       const newStatus = !currentStatus; // Toggle status
       const response = await axios.put(`https://batajbot-crm-f8f614bf11e3.herokuapp.com/users/${id}`, { status: newStatus });
 
+      // Add 4 hours to the trial_end_date
+      const updatedTrialEndDate = new Date(response.data.trial_end_date);
+      updatedTrialEndDate.setHours(updatedTrialEndDate.getHours() + 4);
+      const formattedTrialEndDate = formatDate(updatedTrialEndDate);
+
       // Update the user status and trial_end_date in the state
       setUsers(users.map(user => 
-        (user._id === id ? { ...user, status: newStatus, trial_end_date: response.data.trial_end_date } : user)
+        (user._id === id ? { ...user, status: newStatus, trial_end_date: formattedTrialEndDate } : user)
       ));
     } catch (error) {
       console.error('Error updating status:', error.message);
