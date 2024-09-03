@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://batajbot-crm-f8f614bf11e3.herokuapp.com/users');
+        const response = await axios.get('http://localhost:5000/users');
         // Sort users by trial_end_date in ascending order
         const sortedUsers = response.data.sort((a, b) => new Date(a.trial_end_date) - new Date(b.trial_end_date));
         setUsers(sortedUsers);
@@ -22,16 +22,11 @@ function App() {
   const toggleStatus = async (id, currentStatus) => {
     try {
       const newStatus = !currentStatus; // Toggle status
-      const response = await axios.put(`https://batajbot-crm-f8f614bf11e3.herokuapp.com/users/${id}`, { status: newStatus });
-
-      // Add 4 hours to the trial_end_date
-      const updatedTrialEndDate = new Date(response.data.trial_end_date);
-      updatedTrialEndDate.setHours(updatedTrialEndDate.getHours() + 4);
-      const formattedTrialEndDate = formatDate(updatedTrialEndDate);
+      const response = await axios.put(`http://localhost:5000/users/${id}`, { status: newStatus });
 
       // Update the user status and trial_end_date in the state
       setUsers(users.map(user => 
-        (user._id === id ? { ...user, status: newStatus, trial_end_date: formattedTrialEndDate } : user)
+        (user._id === id ? { ...user, status: newStatus, trial_end_date: response.data.trial_end_date } : user)
       ));
     } catch (error) {
       console.error('Error updating status:', error.message);
@@ -64,7 +59,6 @@ function App() {
     const seconds = String(d.getSeconds()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
-
   return (
     <div className="App">
       <h1>User List</h1>
